@@ -20,9 +20,17 @@ namespace download
             await Task.Run(() =>
             {
                 var engine = Python.CreateEngine();
+                
 
-                var script = @"C:\Users\user\source\repos\download\download\down\download.py";
+                var script = @"C:\Users\user\Desktop\yt-download\download\download\down\download.py";
                 var source = engine.CreateScriptSourceFromFile(script);
+
+                //var argv = new List<string>();
+                //argv.Add("");
+                //argv.Add(Url);
+
+                //engine.GetSysModule().SetVariable("argv",argv);
+                
 
                 var eIO = engine.Runtime.IO;
                 var errors = new MemoryStream();
@@ -32,10 +40,17 @@ namespace download
                 eIO.SetOutput(results, Encoding.Default);
 
                 var scope = engine.CreateScope();
+                scope.ImportModule("os");
+                
                 source.Execute(scope);
 
-                
+                string str(byte[] x) => Encoding.Default.GetString(x);
 
+                Console.WriteLine("ERRORS:");
+                Console.WriteLine(str(errors.ToArray()));
+                Console.WriteLine();
+                Console.WriteLine("Results:");
+                Console.WriteLine(str(results.ToArray()));
             });
         }
     }
